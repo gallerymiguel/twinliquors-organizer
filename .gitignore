@@ -9,3 +9,4 @@ out/*
 !reports/.gitkeep
 !out/.gitkeep
 *.log
+.env.db
