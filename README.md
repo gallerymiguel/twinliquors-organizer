@@ -18,15 +18,30 @@ It supports both a **CLI tool** and a **web interface** that share the same Mari
   - API endpoints for JSON access
 - 🐳 **Dockerized Database**
   - MariaDB container with schema + seed data
+- 🔒 **Code Quality & DevOps**
+  - Pre-commit hooks (Black, Ruff, isort-style imports, trailing whitespace fixes)
+  - GitHub Actions CI pipeline (linting + formatting)
 
 ---
 
 ## Tech Stack
-- **Python 3.11**
+- **Python 3.12**
 - **FastAPI** (API + HTML templates)
 - **Uvicorn** (ASGI server)
 - **MariaDB** (via Docker Compose)
+- **PyMySQL** (DB driver)
 - **Tabulate** (pretty CLI tables)
+- **Pre-commit + GitHub Actions** (code quality CI)
+
+---
+
+## Screenshots
+
+Example:
+```markdown
+Here’s a preview of the FastAPI web app:
+![Twin Liquors Organizer](./docs/twinliquorsapp.png)
+```
 
 ---
 
@@ -78,7 +93,12 @@ Then open 👉 http://127.0.0.1:8000
   ```
 
 ---
-F
+
 ## Project Status
-🚧 Work in Progress — currently supports CLI + basic FastAPI UI.
-Next steps: render active inventory in the web app, add barcode support, and explore hosting options.
+🚧 Work in Progress —
+- ✅ CLI + basic FastAPI UI working
+- ✅ Database schema + Docker setup
+- ✅ Pre-commit hooks + GitHub Actions CI
+- 🔜 Next steps: render inventory in web UI, add barcode support, host online demo
+
+---
