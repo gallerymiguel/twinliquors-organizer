@@ -37,11 +37,9 @@ It supports both a **CLI tool** and a **web interface** that share the same Mari
 
 ## Screenshots
 
-Example:
-```markdown
 Here’s a preview of the FastAPI web app:
-![Twin Liquors Organizer](./docs/twinliquorsapp.png)
-```
+
+![Twin Liquors Organizer](docs/twinliquorsapp.png)
 
 ---
 
