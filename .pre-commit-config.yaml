@@ -1,0 +1,29 @@
+minimum_pre_commit_version: "3.7.0"
+
+default_language_version:
+  python: python3.12
+
+repos:
+  # Black (formatting)
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        args: [--quiet]
+
+  # Ruff (lint + import sort)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.13.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+        # (optional) run formatter too, but you already have Black:
+        # - id: ruff-format
+
+  # Basic sanity hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: trailing-whitespace

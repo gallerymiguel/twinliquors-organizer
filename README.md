@@ -1,6 +1,6 @@
 # Twin Liquors Organizer 🍾
 
-A **Python + FastAPI + Docker** app to help organize liquor store inventory.  
+A **Python + FastAPI + Docker** app to help organize liquor store inventory.
 It supports both a **CLI tool** and a **web interface** that share the same MariaDB database.
 
 ---
@@ -64,15 +64,15 @@ Then open 👉 http://127.0.0.1:8000
 ---
 
 ## Example Commands
-- List items:  
+- List items:
   ```bash
   python app/main.py list-items
   ```
-- Add an item:  
+- Add an item:
   ```bash
   python app/main.py add-item --item "Josh Cabernet" --qty 5 --cat "Wine" --aisle "A1" --loc "shelf"
   ```
-- Export low stock:  
+- Export low stock:
   ```bash
   python app/main.py export-low-stock --threshold 3 --csv reports/low_stock.csv
   ```
@@ -80,5 +80,5 @@ Then open 👉 http://127.0.0.1:8000
 ---
 F
 ## Project Status
-🚧 Work in Progress — currently supports CLI + basic FastAPI UI.  
+🚧 Work in Progress — currently supports CLI + basic FastAPI UI.
 Next steps: render active inventory in the web app, add barcode support, and explore hosting options.

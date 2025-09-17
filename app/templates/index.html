@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Twin Liquors Organizer</title>
+    <style>
+      body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 32px auto; padding: 0 16px; }
+      h1 { margin-bottom: 8px; }
+      form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+      label { font-size: 12px; color: #444; }
+      input, select, button { padding: 8px; font-size: 14px; }
+      .row { display: flex; gap: 12px; }
+      .full { grid-column: 1 / -1; }
+      table { border-collapse: collapse; width: 100%; margin-top: 16px; }
+      th, td { border: 1px solid #ddd; padding: 6px 8px; font-size: 13px; }
+      th { background: #f5f5f5; text-align: left; }
+      .ok { background: #e9f7ef; padding: 8px; border: 1px solid #b6e2c5; }
+      .warn { background: #fff8e1; padding: 8px; border: 1px solid #ffe082; }
+      .actions a { margin-right: 10px; }
+    </style>
+  </head>
+  <body>
+    <h1> Twin Liquors Organizer </h1>
+    <p class="ok">Quick add form writes to the same DB the CLI uses.</p>
+
+    <h2>Add Inventory</h2>
+    <form method="post" action="/add">
+      <div>
+        <label>Item</label>
+        <input name="item" required />
+      </div>
+      <div>
+        <label>Qty</label>
+        <input name="qty" type="number" value="1" required />
+      </div>
+      <div>
+        <label>Category</label>
+        <input name="cat" />
+      </div>
+      <div>
+        <label>Aisle</label>
+        <input name="aisle" />
+      </div>
+      <div>
+        <label>Position</label>
+        <input name="pos" placeholder="Top-Right" />
+      </div>
+      <div>
+        <label>Location</label>
+        <select name="loc">
+          <option value="overstock" selected>overstock</option>
+          <option value="shelf">shelf</option>
+        </select>
+      </div>
+      <div class="full">
+        <label>Barcode</label>
+        <input name="barcode" />
+      </div>
+      <div class="full">
+        <label>Image URL (optional)</label>
+        <input name="img" />
+      </div>
+      <div class="full">
+        <button type="submit">Add Item</button>
+      </div>
+    </form>
+
+    <div class="actions">
+      <a href="/items">View items (JSON)</a>
+      <a href="/low?threshold=3">Low stock <= 3 (JSON)</a>
+      <a href="/suggest?q=Tito">Suggest “Tito” (JSON)</a>
+    </div>
+
+    <h2>Active Inventory</h2>
+    {% if items %}
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Aisle</th>
+            <th>Position</th>
+            <th>Barcode</th>
+            <th>Last Ordered</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in items %}
+          <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.item }}</td>
+            <td>{{ row.quantity }}</td>
+            <td>{{ row.category }}</td>
+            <td>{{ row.location_type }}</td>
+            <td>{{ row.aisle }}</td>
+            <td>{{ row.position }}</td>
+            <td>{{ row.barcode }}</td>
+            <td>{{ row.last_ordered }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="warn">No rows.</p>
+    {% endif %}
+  </body>
+</html>

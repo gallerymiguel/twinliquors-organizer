@@ -7,11 +7,13 @@ import argparse
 import csv
 from datetime import date
 from typing import Optional
+
 from tabulate import tabulate
+
 from db import get_conn
 
-
 # ---------- Inventory commands ----------
+
 
 def remember_name(name: str) -> None:
     """Save product name in name_catalog for future suggestions."""
@@ -99,6 +101,7 @@ def export_low_stock(threshold: int, csv_path: str) -> None:
 
 # ---------- Duties ----------
 
+
 def list_duties() -> None:
     """List duties (newest first)."""
     with get_conn() as conn, conn.cursor() as cur:
@@ -122,6 +125,7 @@ def complete_duty(duty_id: int) -> None:
 
 # ---------- Archive & suggestions ----------
 
+
 def archive_item(item_id: int) -> None:
     """Soft delete: set active=0 for given inventory id."""
     with get_conn() as conn, conn.cursor() as cur:
@@ -141,6 +145,7 @@ def suggest_names(q: str) -> None:
 
 
 # ---------- CLI setup ----------
+
 
 def build_parser() -> argparse.ArgumentParser:
     """Define CLI commands and args."""
@@ -163,8 +168,8 @@ def build_parser() -> argparse.ArgumentParser:
     u.add_argument("--id", required=True, type=int)
     u.add_argument("--qty", required=True, type=int)
 
-    l = s.add_parser("low-stock", help="Show items at/below threshold")
-    l.add_argument("--threshold", type=int, default=3)
+    low_parser = s.add_parser("low-stock", help="Show items at/below threshold")
+    low_parser.add_argument("--threshold", type=int, default=3)
 
     e = s.add_parser("export-low-stock", help="Export low-stock items to CSV")
     e.add_argument("--threshold", type=int, default=3)
