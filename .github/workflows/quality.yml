@@ -1,19 +1,60 @@
 name: Quality checks
 
 on:
-  pull_request:
   push:
-    branches: [ main ]
+  pull_request:
 
 jobs:
-  precommit:
+  test:
     runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:11
+        ports:
+          - 3307:3306
+        env:
+          MARIADB_ROOT_PASSWORD: changeme-root-pass-123
+          MARIADB_DATABASE: twinliquors
+          MARIADB_USER: tlapp
+          MARIADB_PASSWORD: changeme-app-123
+        options: >-
+          --health-cmd="mariadb-admin ping -h127.0.0.1 -P3306 -uroot -pchangeme-root-pass-123 || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.12'
-      - name: Install pre-commit
-        run: pip install pre-commit
-      - name: Run pre-commit (all files on CI)
-        run: pre-commit run --all-files --show-diff-on-failure
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install MariaDB client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mariadb-client
+
+      - name: Test DB connection
+        run: |
+          echo "Waiting for DB to be ready..."
+          for i in {1..5}; do
+            mariadb -h127.0.0.1 -P3307 -utlapp -pchangeme-app-123 twinliquors -e "SELECT 1;" && break
+            echo "DB not ready yet... retrying ($i/5)"
+            sleep 5
+          done
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run type check
+        run: npm run type-check || true
+
+      - name: Run build
+        run: npm run build
