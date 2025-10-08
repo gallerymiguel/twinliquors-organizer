@@ -1,4 +1,3 @@
-# app/cli.py
 import csv
 from typing import Optional
 
@@ -41,29 +40,31 @@ def inv_list():
 @inv.command("add")
 def inv_add(
     item: str = typer.Option(..., help="Display name"),
-    qty: int = typer.Option(..., help="Quantity"),
-    cat: Optional[str] = typer.Option(None, help="Category"),
+    quantity: int = typer.Option(..., help="Quantity"),
+    category: Optional[str] = typer.Option(None, help="Category"),
     aisle: Optional[str] = typer.Option(None, help="Aisle label, e.g., A4"),
-    pos: Optional[str] = typer.Option(None, help="Position within aisle"),
-    loc: str = typer.Option("overstock", help="shelf|overstock"),
+    position: Optional[str] = typer.Option(None, help="Position within aisle"),
+    location_type: str = typer.Option("overstock", help="shelf|overstock"),
     barcode: Optional[str] = typer.Option(None, help="UPC/EAN"),
-    img: Optional[str] = typer.Option(None, help="Image URL"),
+    image_url: Optional[str] = typer.Option(None, help="Image URL"),
 ):
-    repo.insert_item(item, qty, cat, aisle, pos, loc, barcode, img)
+    """Add a new item to inventory."""
+    repo.insert_item(item, quantity, category, aisle, position, location_type, barcode, image_url)
     repo.remember_name(item)
-    print(f"[green]Added[/green] {item} (qty {qty}) @ {loc} {aisle or ''} {pos or ''}")
+    where = f"{location_type} {aisle or ''} {position or ''}".strip()
+    print(f"[green]Added[/green] {item} (quantity {quantity}) @ {where}")
 
 
 @inv.command("qty")
-def inv_update_qty(id: int, qty: int):
+def inv_update_qty(id: int, quantity: int):
     """Update quantity for an item id."""
-    changed = repo.update_qty(id, qty)
+    changed = repo.update_qty(id, quantity)
     print("[green]Updated[/green]" if changed else "[yellow]No change[/yellow]", id)
 
 
 @inv.command("low")
 def inv_low(threshold: int = 3):
-    """Show items with qty <= threshold."""
+    """Show items with quantity <= threshold."""
     rows = repo.low_stock_rows(threshold)
     print_table(rows, f"Low stock (<= {threshold})")
 

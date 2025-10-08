@@ -1,4 +1,3 @@
-# app/repo.py
 from collections.abc import Iterable
 from datetime import date
 from typing import Optional
@@ -17,7 +16,7 @@ def list_items_json():
             FROM inventory
             WHERE active = 1
             ORDER BY item;
-        """
+            """
         )
         return cur.fetchall()
 
@@ -34,13 +33,13 @@ def list_items_active() -> Iterable[dict]:
 
 def insert_item(
     item: str,
-    qty: int,
-    cat: Optional[str],
+    quantity: int,
+    category: Optional[str],
     aisle: Optional[str],
-    pos: Optional[str],
-    loc: str,
+    position: Optional[str],
+    location_type: str,
     barcode: Optional[str],
-    img: Optional[str],
+    image_url: Optional[str],
 ) -> None:
     sql = """
     INSERT INTO inventory(item, quantity, category, aisle, position,
@@ -48,7 +47,20 @@ def insert_item(
     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
     """
     with get_conn() as conn, conn.cursor() as cur:
-        cur.execute(sql, (item, qty, cat, aisle, pos, loc, barcode, img, date.today()))
+        cur.execute(
+            sql,
+            (
+                item,
+                quantity,
+                category,
+                aisle,
+                position,
+                location_type,
+                barcode,
+                image_url,
+                date.today(),
+            ),
+        )
 
 
 def remember_name(name: str) -> None:
@@ -56,9 +68,9 @@ def remember_name(name: str) -> None:
         cur.execute("INSERT IGNORE INTO name_catalog(name) VALUES (%s)", (name,))
 
 
-def update_qty(item_id: int, qty: int) -> int:
+def update_quantity(item_id: int, quantity: int) -> int:
     with get_conn() as conn, conn.cursor() as cur:
-        cur.execute("UPDATE inventory SET quantity=%s WHERE id=%s", (qty, item_id))
+        cur.execute("UPDATE inventory SET quantity=%s WHERE id=%s", (quantity, item_id))
         return cur.rowcount
 
 
