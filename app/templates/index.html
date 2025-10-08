@@ -30,12 +30,12 @@
         <input name="item" required />
       </div>
       <div>
-        <label>Qty</label>
-        <input name="qty" type="number" value="1" required />
+        <label>Quantity</label>
+        <input name="quantity" type="number" value="1" required />
       </div>
       <div>
         <label>Category</label>
-        <input name="cat" />
+        <input name="category" />
       </div>
       <div>
         <label>Aisle</label>
@@ -43,11 +43,11 @@
       </div>
       <div>
         <label>Position</label>
-        <input name="pos" placeholder="Top-Right" />
+        <input name="position" placeholder="Top-Right" />
       </div>
       <div>
-        <label>Location</label>
-        <select name="loc">
+        <label>Location Type</label>
+        <select name="location_type">
           <option value="overstock" selected>overstock</option>
           <option value="shelf">shelf</option>
         </select>
@@ -58,7 +58,7 @@
       </div>
       <div class="full">
         <label>Image URL (optional)</label>
-        <input name="img" />
+        <input name="image_url" />
       </div>
       <div class="full">
         <button type="submit">Add Item</button>
@@ -72,15 +72,16 @@
     </div>
 
     <h2>Active Inventory</h2>
+    <a href="{{ url_for('topstock') }}">View Top Stock</a>
     {% if items %}
       <table>
         <thead>
           <tr>
             <th>ID</th>
             <th>Item</th>
-            <th>Qty</th>
+            <th>Quantity</th>
             <th>Category</th>
-            <th>Location</th>
+            <th>Location Type</th>
             <th>Aisle</th>
             <th>Position</th>
             <th>Barcode</th>

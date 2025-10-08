@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Top Stock Inventory</h2>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Item</th>
+    <th>Quantity</th>
+    <th>Category</th>
+    <th>Location Type</th>
+    <th>Aisle</th>
+    <th>Position</th>
+    <th>Barcode</th>
+    <th>Last Ordered</th>
+  </tr>
+  {% for row in items %}
+  <tr>
+    <td>{{ row['id'] }}</td>
+    <td>{{ row['item'] }}</td>
+    <td>{{ row['quantity'] }}</td>
+    <td>{{ row['category'] }}</td>
+    <td>{{ row['location_type'] }}</td>
+    <td>{{ row['aisle'] }}</td>
+    <td>{{ row['position'] }}</td>
+    <td>{{ row['barcode'] }}</td>
+    <td>{{ row['last_ordered'] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

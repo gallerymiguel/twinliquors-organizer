@@ -38,13 +38,13 @@ def list_items() -> None:
 
 def add_item(
     item: str,
-    qty: int,
-    cat: Optional[str] = None,
+    quantity: int,
+    category: Optional[str] = None,
     aisle: Optional[str] = None,
-    pos: Optional[str] = None,
-    loc: str = "overstock",
+    position: Optional[str] = None,
+    location_type: str = "overstock",
     barcode: Optional[str] = None,
-    img: Optional[str] = None,
+    image_url: Optional[str] = None,
 ) -> None:
     """Insert new inventory row and save its name for suggestions."""
     with get_conn() as conn, conn.cursor() as cur:
@@ -54,22 +54,32 @@ def add_item(
                                   location_type, barcode, image_url, last_ordered)
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """,
-            (item, qty, cat, aisle, pos, loc, barcode, img, date.today()),
+            (
+                item,
+                quantity,
+                category,
+                aisle,
+                position,
+                location_type,
+                barcode,
+                image_url,
+                date.today(),
+            ),
         )
     remember_name(item)
-    where = f"{loc} {aisle or ''} {pos or ''}".strip()
-    print(f"Added: {item} (qty {qty}) @ {where}")
+    where = f"{location_type} {aisle or ''} {position or ''}".strip()
+    print(f"Added: {item} (quantity {quantity}) @ {where}")
 
 
-def update_qty(item_id: int, qty: int) -> None:
+def update_quantity(item_id: int, quantity: int) -> None:
     """Update quantity for given inventory id."""
     with get_conn() as conn, conn.cursor() as cur:
-        cur.execute("UPDATE inventory SET quantity=%s WHERE id=%s", (qty, item_id))
+        cur.execute("UPDATE inventory SET quantity=%s WHERE id=%s", (quantity, item_id))
     print("Updated", item_id)
 
 
 def low_stock(threshold: int) -> None:
-    """Show items with qty <= threshold."""
+    """Show items with quantity <= threshold."""
     with get_conn() as conn, conn.cursor() as cur:
         cur.execute(
             "SELECT id,item,quantity,category FROM inventory "
@@ -156,17 +166,17 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_parser("list-items", help="List inventory")
     a = s.add_parser("add-item", help="Add a new inventory item")
     a.add_argument("--item", required=True)
-    a.add_argument("--qty", required=True, type=int)
-    a.add_argument("--cat")
+    a.add_argument("--quantity", required=True, type=int)
+    a.add_argument("--category")
     a.add_argument("--aisle")
-    a.add_argument("--pos")
-    a.add_argument("--loc", choices=["shelf", "overstock"], default="overstock")
+    a.add_argument("--position")
+    a.add_argument("--location_type", choices=["shelf", "overstock"], default="overstock")
     a.add_argument("--barcode")
-    a.add_argument("--img")
+    a.add_argument("--image_url")
 
-    u = s.add_parser("update-qty", help="Update quantity by id")
+    u = s.add_parser("update-quantity", help="Update quantity by id")
     u.add_argument("--id", required=True, type=int)
-    u.add_argument("--qty", required=True, type=int)
+    u.add_argument("--quantity", required=True, type=int)
 
     low_parser = s.add_parser("low-stock", help="Show items at/below threshold")
     low_parser.add_argument("--threshold", type=int, default=3)
@@ -198,9 +208,18 @@ def main() -> None:
     if a.cmd == "list-items":
         list_items()
     elif a.cmd == "add-item":
-        add_item(a.item, a.qty, a.cat, a.aisle, a.pos, a.loc, a.barcode, a.img)
-    elif a.cmd == "update-qty":
-        update_qty(a.id, a.qty)
+        add_item(
+            a.item,
+            a.quantity,
+            a.category,
+            a.aisle,
+            a.position,
+            a.location_type,
+            a.barcode,
+            a.image_url,
+        )
+    elif a.cmd == "update-quantity":
+        update_quantity(a.id, a.quantity)
     elif a.cmd == "low-stock":
         low_stock(a.threshold)
     elif a.cmd == "export-low-stock":
